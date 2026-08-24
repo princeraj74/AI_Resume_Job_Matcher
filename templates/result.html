@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Match Result</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .prediction {
+            text-align: center;
+            padding: 25px;
+            background: #eff6ff;
+            border-radius: 12px;
+        }
+
+        .prediction h2 {
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+
+        .prediction .value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .percentage {
+            font-weight: bold;
+        }
+
+        .recommendation {
+            margin-top: 25px;
+            padding: 18px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .button {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 25px;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Resume Job Match Result</h1>
+
+        <p>
+            AI-powered resume and job description analysis
+        </p>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="prediction">
+
+            <h2>Final Prediction</h2>
+
+            <div class="value">
+                {{ result.prediction }}
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Model Confidence</h2>
+
+        <div class="row">
+
+            <span class="label">
+                Good Fit
+            </span>
+
+            <span class="percentage">
+                {{ "%.2f"|format(
+                    result.probabilities["Good Fit"] * 100
+                ) }}%
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span class="label">
+                Potential Fit
+            </span>
+
+            <span class="percentage">
+                {{ "%.2f"|format(
+                    result.probabilities["Potential Fit"] * 100
+                ) }}%
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span class="label">
+                No Fit
+            </span>
+
+            <span class="percentage">
+                {{ "%.2f"|format(
+                    result.probabilities["No Fit"] * 100
+                ) }}%
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Matching Information</h2>
+
+        <div class="row">
+
+            <span class="label">
+                Resume Domain
+            </span>
+
+            <span>
+                {{ result.resume_domain }}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span class="label">
+                Job Domain
+            </span>
+
+            <span>
+                {{ result.jd_domain }}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span class="label">
+                Domain Match
+            </span>
+
+            <span>
+                {% if result.domain_match == 1 %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span class="label">
+                Resume-JD Similarity
+            </span>
+
+            <span>
+                {{ "%.2f"|format(
+                    result.similarity_score * 100
+                ) }}%
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="recommendation">
+
+            {% if result.prediction == "Good Fit" %}
+
+                <strong>Recommendation:</strong>
+                Strong alignment exists between the
+                resume and the job description.
+
+            {% elif result.prediction == "Potential Fit" %}
+
+                <strong>Recommendation:</strong>
+                Some relevant alignment exists.
+                Review missing requirements before applying.
+
+            {% else %}
+
+                <strong>Recommendation:</strong>
+                The resume shows limited alignment
+                with the provided job description.
+
+            {% endif %}
+
+        </div>
+
+
+        <a href="/" class="button">
+            Analyze Another Resume
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
